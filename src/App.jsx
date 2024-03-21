@@ -9,7 +9,7 @@ const TaskTracker = () => {
       { id: 2, title: 'Requesting available flights is now taking > 5 seconds', status: 'in progress' },
       { id: 3, title: 'Register with the Mars Ministry of Revenue', status: 'done' },
       { id: 4, title: 'Homepage footer uses an inline style - should use a class', status: 'done' },
-    ];
+      ];
   });
 
   const [newTask, setNewTask] = useState('');
@@ -17,9 +17,9 @@ const TaskTracker = () => {
 
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks]);
+    }, [tasks]);
 
-  const addTaskToTodo = () => {
+  const addTaskToTodo = (status) => {
     if (newTask.trim()) {
       const existingTask = tasks.find(task => task.title.toLowerCase() === newTask.toLowerCase());
       if (existingTask) {
@@ -29,7 +29,7 @@ const TaskTracker = () => {
       const task = {
         id: tasks.length + 1,
         title: newTask,
-        status: 'todo',
+        status: status,
       };
       setTasks([...tasks, task]);
       setNewTask('');
@@ -43,8 +43,8 @@ const TaskTracker = () => {
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, status: newStatus } : task
-      )
-    );
+        )
+        );
   };
 
   const deleteTask = (id) => {
@@ -55,8 +55,8 @@ const TaskTracker = () => {
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, title: newTitle } : task
-      )
-    );
+        )
+        );
   };
 
   return (
@@ -68,7 +68,9 @@ const TaskTracker = () => {
           placeholder="Insert task summary"
           style={{ padding: '8px', fontSize: '16px', flex: '1' }}
         />
-        <button onClick={addTaskToTodo} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#2196F3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Add to Todo</button>
+        <button onClick={() => addTaskToTodo('todo')} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#2196F3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>ToDo</button>
+        <button onClick={() => addTaskToTodo('in progress')} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: 'white', color: '#E59400', border: '2px solid #E59400', borderRadius: '4px', cursor: 'pointer' }}>In Progress</button>
+        <button onClick={() => addTaskToTodo('done')} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: 'white', color: '#008000', border: '2px solid #008000', borderRadius: '4px', cursor: 'pointer' }}>Done</button>
       </div>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
@@ -100,7 +102,7 @@ const TaskTracker = () => {
         />
       </div>
     </div>
-  );
+    );
 };
 
 const Column = ({ title, tasks, moveTask, deleteTask, editTask, nextStatus, bgColor, greenButton }) => (
@@ -116,9 +118,9 @@ const Column = ({ title, tasks, moveTask, deleteTask, editTask, nextStatus, bgCo
         nextStatus={nextStatus}
         greenButton={greenButton}
       />
-    ))}
+      ))}
   </div>
-);
+  );
 
 const Task = ({ task, moveTask, deleteTask, editTask, nextStatus, greenButton }) => {
   const [editing, setEditing] = useState(false);
@@ -151,9 +153,9 @@ const Task = ({ task, moveTask, deleteTask, editTask, nextStatus, greenButton })
           onBlur={handleSave}
           autoFocus
         />
-      ) : (
-        <span style={{ marginBottom: '8px', fontSize: '16px', cursor: 'pointer' }} onClick={handleEdit}>{task.title}</span>
-      )}
+        ) : (
+          <span style={{ marginBottom: '8px', fontSize: '16px', cursor: 'pointer' }} onClick={handleEdit}>{task.title}</span>
+          )}
       {task.status !== 'done' && (
         <div style={{ marginTop: '8px' }}>
           <button
